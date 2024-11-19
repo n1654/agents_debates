@@ -29,7 +29,7 @@ with st.form("my_form"):
         "Вопрос для обсуждения:",
         "Уничтожит ли AGI человечество?",
     )
-    max_count = st.number_input("Количество сообщений", 5, 50, 10)
+    max_count = st.number_input("Количество сообщений", 5, 15, 10)
     submitted = st.form_submit_button("Submit")
     if submitted:
         generate_response(text, max_count)
