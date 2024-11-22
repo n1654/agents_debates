@@ -1,16 +1,12 @@
-from langgraph.graph import StateGraph, START, END
-from langgraph.graph import MessagesState
+from typing import TypedDict
 
-from langchain_gigachat import GigaChat
-
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.schema.output_parser import StrOutputParser
-from typing import Annotated, TypedDict, Union, cast
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langgraph.types import StreamMode
-
-# pip install python-dotenv
 from dotenv import find_dotenv, load_dotenv
+
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema.output_parser import StrOutputParser
+from langchain_core.messages import HumanMessage
+from langchain_gigachat import GigaChat
+from langgraph.graph import END, START, MessagesState, StateGraph
 
 load_dotenv(find_dotenv())
 
@@ -54,7 +50,7 @@ def _ask_person(state: DebatesState, person: Role, opponent: Role):
     )
 
     pipe = chat_template | giga | StrOutputParser()
-    
+
     replics = []
     for m in messages:
         if m.__class__ == HumanMessage:
@@ -65,12 +61,23 @@ def _ask_person(state: DebatesState, person: Role, opponent: Role):
         history = "Пока история пуста, ты начинаешь первым"
     else:
         history = "\n".join(replics)
-    
-    resp = pipe.invoke({"history": history, "main_topic": main_topic, "bio": person["bio"], "bio2": opponent["bio"]})
+
+    resp = pipe.invoke(
+        {
+            "history": history,
+            "main_topic": main_topic,
+            "bio": person["bio"],
+            "bio2": opponent["bio"],
+        }
+    )
     if not resp.startswith(person["name"]):
         resp = f"{person['name']}: {resp}"
 
-    return {"messages": [resp], "discuss_count": state.get("discuss_count", 0) + 1, "last_person": person["name"]}
+    return {
+        "messages": [resp],
+        "discuss_count": state.get("discuss_count", 0) + 1,
+        "last_person": person["name"],
+    }
 
 
 def ask_person1(state: DebatesState):
@@ -79,6 +86,7 @@ def ask_person1(state: DebatesState):
 
 def ask_person2(state: DebatesState):
     return _ask_person(state, altman, elon)
+
 
 def decide_to_stop(state: DebatesState) -> bool:
     discuss_count = state.get("discuss_count", 0)

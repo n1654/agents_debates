@@ -1,10 +1,8 @@
 import streamlit as st
+
 from graph import graph
 
-
 st.title("🦜🔗 К коллайдеру!")
-
-# openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
 
 def generate_response(input_text, max_count):
@@ -33,7 +31,3 @@ with st.form("my_form"):
     submitted = st.form_submit_button("Submit")
     if submitted:
         generate_response(text, max_count)
-    # if not openai_api_key.startswith("sk-"):
-    #     st.warning("Please enter your OpenAI API key!", icon="⚠")
-    # if submitted and openai_api_key.startswith("sk-"):
-    #     generate_response(text)
