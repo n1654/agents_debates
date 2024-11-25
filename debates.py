@@ -10,15 +10,15 @@ def generate_response(input_text, max_count):
     # st.info(model.invoke(input_text))
     inputs = {"main_topic": input_text, "messages": [], "max_count": max_count}
     for output in graph.stream(inputs, stream_mode="values"):
-        if len(output['messages']) == 0:
+        if len(output["messages"]) == 0:
             continue
-        resp = output['messages'][-1].content
-        person = output['last_person']
-        icon = '👨'
-        if person == 'Илон':
-            icon = '🚀'
-        if person == 'Сэм':
-            icon = '🧑‍💻'
+        resp = output["messages"][-1].content
+        person = output["last_person"]
+        icon = "👨"
+        if person == "Илон":
+            icon = "🚀"
+        if person == "Сэм":
+            icon = "🧑‍💻"
         st.info(resp, icon=icon)
 
 

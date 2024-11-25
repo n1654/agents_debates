@@ -165,3 +165,4 @@ db_builder/mdx_docs/course
 firecrowl_parser.py
 parse.json
 .vscode/*
+.langgraph_api/*
