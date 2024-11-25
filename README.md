@@ -31,4 +31,6 @@ pip install -U "langgraph-cli[inmem]"
 langgraph dev
 ```
 3. Перейдите в запустившийся браузер
-![alt text](image-1.png)
+![alt text](image-2.png)
+
+4. Для старта обсуждения задайте поле "Main Topic"
