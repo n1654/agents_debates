@@ -1,13 +1,13 @@
 import streamlit as st
 from graph import graph
 
-def generate_response(input_text, max):
-    inputs = {"main_topic": input_text, "messages": [], "max_count": max}
-    for update in graph.stream(inputs, {"recursion_limit": max}, stream_mode="updates"):
-        if "🚀 Elon" in update:
-            st.info(update["🚀 Elon"]["messages"][0], icon="🚀")
-        if "🧑‍💻 Sam" in update:
-            st.info(update["🧑‍💻 Sam"]["messages"][0], icon="🧑‍💻")
+def generate_response(input_text, max_count):
+    inputs = {"main_topic": input_text, "messages": [], "max_count": max_count}
+    for update in graph.stream(inputs, {"recursion_limit": 100}, stream_mode="updates"):
+        if "🚀Elon" in update:
+            st.info(update["🚀Elon"]["messages"][0], icon="🚀")
+        if "🧑Sam" in update:
+            st.info(update["🧑Sam"]["messages"][0], icon="🧑")
 
 st.title("🦜🔗 К коллайдеру!")
 

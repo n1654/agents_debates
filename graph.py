@@ -94,6 +94,8 @@ giga = GigaChat(
     max_tokens=8000,
     verify_ssl_certs=False,
 )
+# from langchain_openai import ChatOpenAI
+# giga = ChatOpenAI(model="GPT-4o")
 
 
 def ask_elon(state: DebatesState):
@@ -106,18 +108,18 @@ def ask_sam(state: DebatesState):
 
 builder = StateGraph(DebatesState)
 
-builder.add_node("🚀 Elon", ask_elon)
-builder.add_node("🧑‍💻 Sam", ask_sam)
+builder.add_node("🚀Elon", ask_elon)
+builder.add_node("🧑Sam", ask_sam)
 
-builder.add_edge(START, "🚀 Elon")
-builder.add_edge("🚀 Elon", "🧑‍💻 Sam")
-builder.add_edge("🧑‍💻 Sam", END)
+builder.add_edge(START, "🚀Elon")
+builder.add_edge("🚀Elon", "🧑Sam")
+builder.add_edge("🧑Sam", END)
 builder.add_conditional_edges(
-    "🧑‍💻 Sam",
+    "🧑Sam",
     decide_to_stop,
     {
         True: END,
-        False: "🚀 Elon",
+        False: "🚀Elon",
     },
 )
 
