@@ -7,12 +7,22 @@ from langchain.schema.output_parser import StrOutputParser
 from langchain_core.messages import HumanMessage
 from langchain_gigachat import GigaChat
 from langgraph.graph import END, START, MessagesState, StateGraph
+from langgraph.types import Command
+from typing import Literal
 
 load_dotenv(find_dotenv())
 
+giga = GigaChat(
+    model="GigaChat-Max",
+    profanity_check=False,
+    timeout=600,
+    max_tokens=8000,
+    verify_ssl_certs=False,
+)
+
 
 class DebatesState(MessagesState):
-    main_topic: str
+    main_topic: str = "Уничтожит ли AGI человечество?"
     discuss_count: int = 0
     max_count: int = 10
 
@@ -75,56 +85,24 @@ def _ask_person(state: DebatesState, person: Role, opponent: Role):
     }
 
 
-def ask_elon(state: DebatesState):
-    return _ask_person(state, elon, altman)
+def ask_elon(state: DebatesState) -> Command[Literal["🧑Sam"]]:
+    return Command(update=_ask_person(state, elon, altman), goto="🧑Sam")
 
 
-def ask_sam(state: DebatesState):
-    return _ask_person(state, altman, elon)
-
-
-def decide_to_stop(state: DebatesState) -> bool:
-    return state.get("discuss_count", 0) > state.get("max_count", 10)
-
-
-giga = GigaChat(
-    model="GigaChat-Max",
-    profanity_check=False,
-    timeout=600,
-    max_tokens=8000,
-    verify_ssl_certs=False,
-)
-# from langchain_openai import ChatOpenAI
-# giga = ChatOpenAI(model="GPT-4o")
-
-
-def ask_elon(state: DebatesState):
-    return _ask_person(state, elon, altman)
-
-
-def ask_sam(state: DebatesState):
-    return _ask_person(state, altman, elon)
+def ask_sam(state: DebatesState) -> Command[Literal["🚀Elon", "__end__"]]:
+    return Command(
+        update=_ask_person(state, elon, altman),
+        goto=END if state["discuss_count"] > state["max_count"] else "🚀Elon",
+    )
 
 
 builder = StateGraph(DebatesState)
-
 builder.add_node("🚀Elon", ask_elon)
 builder.add_node("🧑Sam", ask_sam)
-
 builder.add_edge(START, "🚀Elon")
-builder.add_edge("🚀Elon", "🧑Sam")
-builder.add_edge("🧑Sam", END)
-builder.add_conditional_edges(
-    "🧑Sam",
-    decide_to_stop,
-    {
-        True: END,
-        False: "🚀Elon",
-    },
-)
-
 graph = builder.compile()
 
-# inputs = {"main_topic": "Уничтожит ли AGI человечество?", "messages": []}
+# # Uncomment this to run locally
+# inputs = {"main_topic": "Уничтожит ли AGI человечество?", "max_count": 1}
 # for output in graph.stream(inputs, stream_mode="updates"):
 #     print(output)
