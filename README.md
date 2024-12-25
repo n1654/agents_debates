@@ -11,10 +11,10 @@ pip install -r requirements.txt
 ```
 4. Создать файл .env с настройками доступа к GigaChat API, например такой:
 ```
-GIGACHAT_USER=...
-GIGACHAT_PASSWORD=...
-GIGACHAT_BASE_URL=...
+AUTH_KEY="..."
 ```
+[Подробнее про ключ авторизации](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-using-api#poluchenie-avtorizatsionnyh-dannyh) 
+
 5. Запустите приложение
 ```bash
 streamlit run debates.py

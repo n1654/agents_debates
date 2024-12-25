@@ -1,3 +1,5 @@
+import os
+ 
 from typing import TypedDict
 
 from dotenv import find_dotenv, load_dotenv
@@ -13,6 +15,7 @@ from typing import Literal
 load_dotenv(find_dotenv())
 
 giga = GigaChat(
+    credentials=os.getenv("AUTH_KEY"),
     model="GigaChat-Max",
     profanity_check=False,
     timeout=600,
